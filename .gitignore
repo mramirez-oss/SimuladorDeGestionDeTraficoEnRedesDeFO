@@ -1,0 +1,6 @@
+/build/
+/dist/
+/nbproject/private/
+/nbproject/Makefile-genesis.properties
+/nbproject/Package-*.bash
+*.log
