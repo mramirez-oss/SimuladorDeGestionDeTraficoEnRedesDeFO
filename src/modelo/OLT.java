@@ -69,7 +69,42 @@ public class OLT extends DispositivoRed {
     }
     
     public void distribuirBanda(){
-        //tengo que pensarle un fla
+        //primero se ordena por prioridad
+        for (int i = 0; i < listaONTs.size(); i++) {
+            for (int j = 0; j < listaONTs.size() -1; j++) {
+                if(listaONTs.get(j).getPrioridad() < listaONTs.get(j+1).getPrioridad()){
+                    ONT temp = listaONTs.get(j);
+                    listaONTs.set(j, listaONTs.get(j+1));
+                    listaONTs.set(j+1, temp);
+                }
+            }
+        }
+        //Calcular la banda comprometida
+        double bandaComprometida =0;
+        for(ONT ont: listaONTs){
+            bandaComprometida+=ont.getBandaMinima();
+        }
+        //Asignar el minimo a cada una
+        for(ONT ont: listaONTs){
+            ont.setAnchoBajada(ont.getBandaMinima());
+            ont.setAnchoSubida(ont.getBandaMinima()*0.5);
+        }
+        //Se calcula el excedente disponible y la suma de prioridades para despues repartir proporcionalmente
+        double excedente = getAnchoTotalBajada() - bandaComprometida;
+        if(excedente >0){
+            int sumaPrioridades = 0;
+            for(ONT ont: listaONTs){
+                sumaPrioridades += ont.getPrioridad();
+            }
+        
+        //
+        for(ONT ont: listaONTs){
+            double proporcion = (double) ont.getPrioridad() / sumaPrioridades;
+            double bandaAdicional = excedente * proporcion;
+            ont.setAnchoBajada(ont.getAnchoBajada()+ bandaAdicional);
+            ont.setAnchoSubida(ont.getAnchoSubida() + (bandaAdicional * 0.5));
+        }
+        }
     }
     
     public double getPorcentajeUso(){
