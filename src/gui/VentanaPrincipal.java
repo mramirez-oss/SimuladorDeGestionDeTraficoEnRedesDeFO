@@ -7,8 +7,11 @@ package gui;
 import java.text.ParseException;
 import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
+import modelo.OLT;
 import modelo.ONT;
+import modelo.ONTEmpresarial;
 import modelo.ONTResidencial;
+import persistencia.GestorPersistencia;
 
 /**
  *
@@ -22,8 +25,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form VentanaPrincipal
      */
-    public VentanaPrincipal() {
+    public VentanaPrincipal(OLT olt) {
         initComponents();
+        this.olt = olt;
+        this.gestor = new GestorPersistencia("red_gpon.dat");
+        
+    }
+
+    private VentanaPrincipal() {
+        initComponents();
+        
     }
 
     /**
@@ -47,7 +58,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Lextra = new javax.swing.JLabel();
         Tbanda = new javax.swing.JTextField();
         Bagregar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        Beliminar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         RBempresarial = new javax.swing.JRadioButton();
@@ -58,7 +69,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Ctv = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(600, 430));
         setResizable(false);
         setSize(new java.awt.Dimension(600, 430));
 
@@ -88,9 +98,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Bagregar.setText("+Agregar");
         Bagregar.addActionListener(this::BagregarActionPerformed);
 
-        jButton1.setBackground(new java.awt.Color(255, 51, 51));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setText("-Eliminar");
+        Beliminar.setBackground(new java.awt.Color(255, 51, 51));
+        Beliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Beliminar.setText("-Eliminar");
+        Beliminar.addActionListener(this::BeliminarActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(51, 51, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -134,7 +145,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(Bagregar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
+                                .addComponent(Beliminar))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(RBempresarial)
@@ -206,7 +217,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Bagregar)
-                    .addComponent(jButton1))
+                    .addComponent(Beliminar))
                 .addGap(121, 121, 121))
         );
 
@@ -299,14 +310,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if(RBresidencial.isSelected()){
             tv = Ctv.isSelected();
             ONT ont = new ONTResidencial(cant, tv, id, nombre, km);
-            
+            ont.setAnchoBajada(banda);
+            try{
+                olt.agregarONT(ont);
+            }catch(IllegalArgumentException e){
+             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+             return;
+            }
+            JOptionPane.showMessageDialog(this, "ONT agregada: " +ont.getId(), "Exito", JOptionPane.INFORMATION_MESSAGE);   
+        }
+        else if(RBempresarial.isSelected()){
+            ONT ont = new ONTEmpresarial(banda, cant, id, nombre, km);
+            try{
+                olt.agregarONT(ont);
+            }catch(IllegalArgumentException e){
+             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+             return;
+            }
+            JOptionPane.showMessageDialog(this, "ONT agregada: " +ont.getId(), "Exito", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_BagregarActionPerformed
 
     private void RBempresarialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBempresarialActionPerformed
         Lextra.setText("SLA Garantizado");
         Lnumerico.setText("IP's fijas");
-        Ctv.setEnabled(false);
+        Ctv.setEnabled(false);    
     }//GEN-LAST:event_RBempresarialActionPerformed
 
     private void RBresidencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBresidencialActionPerformed
@@ -314,6 +342,96 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Lnumerico.setText("Cantidad de Usuarios");
         Ctv.setEnabled(true);
     }//GEN-LAST:event_RBresidencialActionPerformed
+
+    private void BeliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BeliminarActionPerformed
+        // TODO add your handling code here:
+        double km=0, banda = 0 ;
+        String nombre= null, id=null;
+        int cant = 0;
+        boolean tv = false;
+        
+        try{
+            id = Tid.getText();
+            if(id.isBlank()){
+                throw new IllegalArgumentException("Ingrese una id");
+            }
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            Tid.selectAll();
+            Tid.requestFocus();
+            return;
+        }
+        
+        try{
+            nombre = Tnombre.getText();
+            if(nombre.isBlank()){
+                throw new IllegalArgumentException("Ingrese un nombre");
+            }
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            Tnombre.selectAll();
+            Tnombre.requestFocus();
+            return;
+        } 
+    
+        try{
+            km = Double.parseDouble(Tdistancia.getText());
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(this,"Ingrese una distancia valida", "Error", JOptionPane.ERROR_MESSAGE);
+            Tdistancia.selectAll();
+            Tdistancia.requestFocus();
+            return;
+        }
+        try{
+        if(buttonGroup1.isSelected(m)){
+           throw new IllegalArgumentException("Seleccione una opcion"); 
+        } 
+        }catch(IllegalArgumentException e){
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                RBresidencial.requestFocus();
+                return;
+                }
+       
+        
+        try{
+            banda=Double.parseDouble(Tbanda.getText());
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(this,"Ingrese una cantidad de MB valida", "Error", JOptionPane.ERROR_MESSAGE);
+            Tbanda.selectAll();
+            Tbanda.requestFocus();
+            return;
+        }
+        
+        try {
+            Spinner.commitEdit();
+        } catch (ParseException ex) {
+            System.getLogger(VentanaPrincipal.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            Spinner.requestFocus();
+            return;
+        }
+        cant = (int) Spinner.getValue();
+        if(RBempresarial.isSelected()){
+            ONT ont = new ONTEmpresarial(banda, cant, id, nombre, km);
+            try{
+                olt.eliminarONT(ont);
+            }catch(IllegalArgumentException e){
+               JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+               return; 
+            }
+            JOptionPane.showMessageDialog(this, "ONT eliminada: " +ont.getId(), "Exito", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(RBresidencial.isSelected()){
+            tv=Ctv.isSelected();
+            ONT ont = new ONTResidencial(cant, tv, id, nombre, km);
+            try{
+                olt.eliminarONT(ont);
+            }catch(IllegalArgumentException e){
+               JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+               return; 
+            }
+            JOptionPane.showMessageDialog(this, "ONT eliminada: " +ont.getId(), "Exito", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_BeliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -342,6 +460,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Bagregar;
+    private javax.swing.JButton Beliminar;
     private javax.swing.JCheckBox Ctv;
     private javax.swing.JLabel Lextra;
     private javax.swing.JLabel Lid;
@@ -356,15 +475,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField Tid;
     private javax.swing.JTextField Tnombre;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
-
-    private Exception IllegalArgumentException(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
+    
+    private OLT olt;
+    private GestorPersistencia gestor;
 }

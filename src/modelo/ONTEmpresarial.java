@@ -10,7 +10,7 @@ public class ONTEmpresarial extends ONT {
         private double slaGarantizado;
         private int numIpsFijas;
 
-    public ONTEmpresarial(double slaGarantizado, int numIpsFijas, String perfil, String id, String nombre, double distanciaFibra) {
+    public ONTEmpresarial(double slaGarantizado, int numIpsFijas, String id, String nombre, double distanciaFibra) {
         super("Empresarial", id, nombre, distanciaFibra);
         this.slaGarantizado = slaGarantizado;
         this.numIpsFijas = numIpsFijas;
