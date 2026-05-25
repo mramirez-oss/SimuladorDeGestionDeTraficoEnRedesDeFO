@@ -18,8 +18,9 @@ public class VentanaInicialOLT extends javax.swing.JDialog {
 
     /**
      * Creates new form VentanaInicialOLT
+     * @param parent
      */
-    public VentanaInicialOLT(java.awt.Frame parent, boolean modal) {
+    public VentanaInicialOLT(java.awt.Frame parent) {
         //super(parent, modal);
         super(parent, "Configuracion de OLT", true);    
         initComponents();
@@ -228,7 +229,7 @@ public class VentanaInicialOLT extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                VentanaInicialOLT dialog = new VentanaInicialOLT(new javax.swing.JFrame(), true);
+                VentanaInicialOLT dialog = new VentanaInicialOLT(new javax.swing.JFrame());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

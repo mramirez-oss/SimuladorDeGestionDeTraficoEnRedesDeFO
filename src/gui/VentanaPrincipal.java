@@ -4,6 +4,7 @@
  */
 package gui;
 
+import java.io.IOException;
 import java.text.ParseException;
 import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
@@ -59,8 +60,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Tbanda = new javax.swing.JTextField();
         Bagregar = new javax.swing.JButton();
         Beliminar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        Bguardar = new javax.swing.JButton();
         RBempresarial = new javax.swing.JRadioButton();
         RBresidencial = new javax.swing.JRadioButton();
         Lnumerico = new javax.swing.JLabel();
@@ -103,14 +103,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Beliminar.setText("-Eliminar");
         Beliminar.addActionListener(this::BeliminarActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(51, 51, 255));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Guardar");
-
-        jButton3.setBackground(new java.awt.Color(51, 204, 0));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Cargar");
+        Bguardar.setBackground(new java.awt.Color(51, 51, 255));
+        Bguardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bguardar.setForeground(new java.awt.Color(255, 255, 255));
+        Bguardar.setText("Guardar");
+        Bguardar.addActionListener(this::BguardarActionPerformed);
 
         buttonGroup1.add(RBempresarial);
         RBempresarial.setText("Empresarial");
@@ -167,14 +164,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(Tnombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                             .addComponent(Tid))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(63, 63, 63))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(Ltitulo)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(150, 150, 150)
+                        .addComponent(Ltitulo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(Bguardar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(250, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -184,12 +182,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(Ltitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Lid)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Tid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)))
+                .addGap(11, 11, 11)
+                .addComponent(Tid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -218,7 +212,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Bagregar)
                     .addComponent(Beliminar))
-                .addGap(121, 121, 121))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Bguardar)
+                .addGap(88, 88, 88))
         );
 
         pack();
@@ -433,6 +429,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BeliminarActionPerformed
 
+    private void BguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BguardarActionPerformed
+        // TODO add your handling code here:
+            try{
+                gestor.guardar(olt);
+                JOptionPane.showMessageDialog(this, "OLT: " + olt.getId() + " guardado con exito.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            }catch(IOException e){
+                JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+    }//GEN-LAST:event_BguardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -461,6 +468,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Bagregar;
     private javax.swing.JButton Beliminar;
+    private javax.swing.JButton Bguardar;
     private javax.swing.JCheckBox Ctv;
     private javax.swing.JLabel Lextra;
     private javax.swing.JLabel Lid;
@@ -475,8 +483,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField Tid;
     private javax.swing.JTextField Tnombre;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
