@@ -10,7 +10,7 @@ public class ONTResidencial extends ONT {
     private int numUsuarios;
     private boolean tieneTv; //por si incluya servicio de TV
 
-    public ONTResidencial(int numUsuarios, boolean tieneTv, String perfil, String id, String nombre, double distanciaFibra) {
+    public ONTResidencial(int numUsuarios, boolean tieneTv, String id, String nombre, double distanciaFibra) {
         super("Residencial", id, nombre, distanciaFibra);
         this.numUsuarios = numUsuarios;
         this.tieneTv = tieneTv;
