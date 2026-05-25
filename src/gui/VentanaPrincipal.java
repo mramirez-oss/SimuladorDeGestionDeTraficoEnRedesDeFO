@@ -4,6 +4,11 @@
  */
 package gui;
 
+import java.text.ParseException;
+import javax.swing.ButtonModel;
+import javax.swing.JOptionPane;
+import modelo.ONT;
+import modelo.ONTResidencial;
 
 /**
  *
@@ -12,6 +17,7 @@ package gui;
 public class VentanaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
+    private ButtonModel m;
 
     /**
      * Creates new form VentanaPrincipal
@@ -39,7 +45,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Tdistancia = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         Lextra = new javax.swing.JLabel();
-        Textra = new javax.swing.JTextField();
+        Tbanda = new javax.swing.JTextField();
         Bagregar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -75,7 +81,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         Lextra.setText("Banda");
 
-        Textra.addActionListener(this::TextraActionPerformed);
+        Tbanda.addActionListener(this::TbandaActionPerformed);
 
         Bagregar.setBackground(new java.awt.Color(204, 255, 51));
         Bagregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -133,7 +139,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(RBempresarial)
                                     .addComponent(Lextra)
-                                    .addComponent(Textra, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(Tbanda, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(RBresidencial)
@@ -194,7 +200,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(Ltv))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Textra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Tbanda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Ctv))
                 .addGap(18, 18, 18)
@@ -219,14 +225,82 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TdistanciaActionPerformed
 
-    private void TextraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextraActionPerformed
+    private void TbandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TbandaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TextraActionPerformed
+    }//GEN-LAST:event_TbandaActionPerformed
 
     private void BagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BagregarActionPerformed
-        double km=0;
-        String nombre, id;
+        double km=0, banda = 0 ;
+        String nombre= null, id=null;
+        int cant = 0;
+        boolean tv = false;
         
+        try{
+            id = Tid.getText();
+            if(id.isBlank()){
+                throw new IllegalArgumentException("Ingrese una id");
+            }
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            Tid.selectAll();
+            Tid.requestFocus();
+            return;
+        }
+        
+        try{
+            nombre = Tnombre.getText();
+            if(nombre.isBlank()){
+                throw new IllegalArgumentException("Ingrese un nombre");
+            }
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            Tnombre.selectAll();
+            Tnombre.requestFocus();
+            return;
+        } 
+    
+        try{
+            km = Double.parseDouble(Tdistancia.getText());
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(this,"Ingrese una distancia valida", "Error", JOptionPane.ERROR_MESSAGE);
+            Tdistancia.selectAll();
+            Tdistancia.requestFocus();
+            return;
+        }
+        try{
+        if(buttonGroup1.isSelected(m)){
+           throw new IllegalArgumentException("Seleccione una opcion"); 
+        } 
+        }catch(IllegalArgumentException e){
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                RBresidencial.requestFocus();
+                return;
+                }
+       
+        
+        try{
+            banda=Double.parseDouble(Tbanda.getText());
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(this,"Ingrese una cantidad de MB valida", "Error", JOptionPane.ERROR_MESSAGE);
+            Tbanda.selectAll();
+            Tbanda.requestFocus();
+            return;
+        }
+        
+        try {
+            Spinner.commitEdit();
+        } catch (ParseException ex) {
+            System.getLogger(VentanaPrincipal.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            Spinner.requestFocus();
+            return;
+        }
+        cant = (int) Spinner.getValue();
+        
+        if(RBresidencial.isSelected()){
+            tv = Ctv.isSelected();
+            ONT ont = new ONTResidencial(cant, tv, id, nombre, km);
+            
+        }
     }//GEN-LAST:event_BagregarActionPerformed
 
     private void RBempresarialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBempresarialActionPerformed
@@ -277,8 +351,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JRadioButton RBempresarial;
     private javax.swing.JRadioButton RBresidencial;
     private javax.swing.JSpinner Spinner;
+    private javax.swing.JTextField Tbanda;
     private javax.swing.JTextField Tdistancia;
-    private javax.swing.JTextField Textra;
     private javax.swing.JTextField Tid;
     private javax.swing.JTextField Tnombre;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -289,4 +363,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
+
+    private Exception IllegalArgumentException(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
