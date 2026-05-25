@@ -22,7 +22,8 @@ public class VentanaInicialOLT extends javax.swing.JDialog {
      */
     public VentanaInicialOLT(java.awt.Frame parent) {
         //super(parent, modal);
-        super(parent, "Configuracion de OLT", true);    
+        super(parent, "Configuracion de OLT", true);  
+        this.gestor = new GestorPersistencia("red_gpon.dat");
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -203,7 +204,7 @@ public class VentanaInicialOLT extends javax.swing.JDialog {
         }
         
     }//GEN-LAST:event_BcargarActionPerformed
-
+    
     /**
      * @param args the command line arguments
      */
@@ -256,7 +257,7 @@ public class VentanaInicialOLT extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
     private OLT oltseleccionada;
     private GestorPersistencia gestor;
-    
+  
     public OLT getOLTseleccionada(){
         return oltseleccionada;
     }
