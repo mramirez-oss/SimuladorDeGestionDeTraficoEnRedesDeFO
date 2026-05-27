@@ -4,9 +4,9 @@
  */
 package gui;
 
+import java.io.IOException;
 import java.text.ParseException;
-import javax.swing.ButtonModel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import modelo.OLT;
 import modelo.ONT;
 import modelo.ONTEmpresarial;
@@ -26,16 +26,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal(OLT olt) {
-        initComponents();
         this.olt = olt;
         this.gestor = new GestorPersistencia("red_gpon.dat");
         
+        initComponents();
+    setTitle("Sistema GPON - " + olt.getId());
+    setSize(600, 400);
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    private VentanaPrincipal() {
-        initComponents();
-        
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,14 +60,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Tbanda = new javax.swing.JTextField();
         Bagregar = new javax.swing.JButton();
         Beliminar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        Bguardar = new javax.swing.JButton();
         RBempresarial = new javax.swing.JRadioButton();
         RBresidencial = new javax.swing.JRadioButton();
         Lnumerico = new javax.swing.JLabel();
         Spinner = new javax.swing.JSpinner();
         Ltv = new javax.swing.JLabel();
         Ctv = new javax.swing.JCheckBox();
+        BverRed = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -77,14 +78,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         Lid.setText("ID dispositivo");
 
+        Tid.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Tid.addActionListener(this::TidActionPerformed);
 
         jLabel1.setText("Nombre");
 
+        Tnombre.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Tnombre.addActionListener(this::TnombreActionPerformed);
 
         jLabel2.setText("Distancia de Fibra (km)");
 
+        Tdistancia.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Tdistancia.addActionListener(this::TdistanciaActionPerformed);
 
         jLabel3.setText("Perfil");
@@ -103,14 +107,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Beliminar.setText("-Eliminar");
         Beliminar.addActionListener(this::BeliminarActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(51, 51, 255));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Guardar");
-
-        jButton3.setBackground(new java.awt.Color(51, 204, 0));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Cargar");
+        Bguardar.setBackground(new java.awt.Color(51, 51, 255));
+        Bguardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bguardar.setForeground(new java.awt.Color(255, 255, 255));
+        Bguardar.setText("Guardar");
+        Bguardar.addActionListener(this::BguardarActionPerformed);
 
         buttonGroup1.add(RBempresarial);
         RBempresarial.setText("Empresarial");
@@ -128,54 +129,55 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         Ctv.setText("SI");
 
+        BverRed.setBackground(new java.awt.Color(0, 153, 0));
+        BverRed.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BverRed.setForeground(new java.awt.Color(255, 255, 255));
+        BverRed.setText("Ver Red ");
+        BverRed.addActionListener(this::BverRedActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(Lid)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(Tdistancia, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(Bagregar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Beliminar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RBempresarial)
-                                    .addComponent(Lextra)
-                                    .addComponent(Tbanda, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RBresidencial)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(Lnumerico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(Spinner))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(Ctv, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(Ltv))))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(Tnombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                            .addComponent(Tid))
+                        .addComponent(Bagregar)
+                        .addGap(9, 9, 9)
+                        .addComponent(Bguardar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(BverRed)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(63, 63, 63))))
+                        .addComponent(Beliminar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(RBempresarial)
+                        .addGap(6, 6, 6)
+                        .addComponent(RBresidencial))
+                    .addComponent(Lid)
+                    .addComponent(Tid)
+                    .addComponent(jLabel1)
+                    .addComponent(Tnombre)
+                    .addComponent(jLabel2)
+                    .addComponent(Tdistancia, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Tbanda, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(Spinner)
+                        .addGap(12, 12, 12)
+                        .addComponent(Ctv, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Lextra)
+                        .addGap(57, 57, 57)
+                        .addComponent(Lnumerico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(12, 12, 12)
+                        .addComponent(Ltv)))
+                .addContainerGap(52, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(Ltitulo)
-                .addContainerGap(250, Short.MAX_VALUE))
+                .addGap(73, 73, 73)
+                .addComponent(Ltitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,19 +186,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(Ltitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Lid)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Tid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)))
+                .addGap(17, 17, 17)
+                .addComponent(Tid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Tnombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(7, 7, 7)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(Tdistancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
@@ -217,8 +215,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Bagregar)
-                    .addComponent(Beliminar))
-                .addGap(121, 121, 121))
+                    .addComponent(Beliminar)
+                    .addComponent(Bguardar)
+                    .addComponent(BverRed))
+                .addGap(37, 37, 37))
         );
 
         pack();
@@ -433,6 +433,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BeliminarActionPerformed
 
+    private void BguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BguardarActionPerformed
+        // TODO add your handling code here:
+            try{
+                gestor.guardar(olt);
+                JOptionPane.showMessageDialog(this, "OLT: " + olt.getId() + " guardado con exito.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            }catch(IOException e){
+                JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+    }//GEN-LAST:event_BguardarActionPerformed
+
+    private void BverRedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BverRedActionPerformed
+        // TODO add your handling code here:
+        dialogRed = new DialogRed(this, olt);
+        dialogRed.setVisible(true);
+        timerActualizacion = new Timer(1000,e -> {
+            dialogRed.actualizarRed(olt);
+        });
+        timerActualizacion.start();
+    }//GEN-LAST:event_BverRedActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -454,13 +475,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Bagregar;
     private javax.swing.JButton Beliminar;
+    private javax.swing.JButton Bguardar;
+    private javax.swing.JButton BverRed;
     private javax.swing.JCheckBox Ctv;
     private javax.swing.JLabel Lextra;
     private javax.swing.JLabel Lid;
@@ -475,8 +496,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField Tid;
     private javax.swing.JTextField Tnombre;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -485,4 +504,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private OLT olt;
     private GestorPersistencia gestor;
+    private PanelRed panelRed;
+    private Timer timerActualizacion;
+    private DialogRed dialogRed;
 }

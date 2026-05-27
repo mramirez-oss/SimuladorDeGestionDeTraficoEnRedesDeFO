@@ -21,12 +21,13 @@ public class GestorPersistencia {
         this.nombreArchivo = nombreArchivo;
     }
     
-    public void guardar(OLT olt){
+    public void guardar(OLT olt) throws IOException{
         try(ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(nombreArchivo))){
             salida.writeObject(olt);
             salida.close();
         } catch (IOException ex) {
             System.out.println("Error: " + ex.getLocalizedMessage());
+            throw ex;
         }
     }
     
