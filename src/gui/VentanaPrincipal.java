@@ -78,14 +78,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         Lid.setText("ID dispositivo");
 
+        Tid.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Tid.addActionListener(this::TidActionPerformed);
 
         jLabel1.setText("Nombre");
 
+        Tnombre.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Tnombre.addActionListener(this::TnombreActionPerformed);
 
         jLabel2.setText("Distancia de Fibra (km)");
 
+        Tdistancia.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Tdistancia.addActionListener(this::TdistanciaActionPerformed);
 
         jLabel3.setText("Perfil");
