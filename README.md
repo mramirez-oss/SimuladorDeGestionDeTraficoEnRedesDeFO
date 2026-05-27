@@ -112,3 +112,4 @@ El programa hace esto automáticamente:
 
 3. **El resultado:** Cada cliente tiene su banda mínima garantizada, pero si hay capacidad disponible, usa más.
 
+La parte de DialogRed y PanelRed estan hechos con claude.
